@@ -492,11 +492,7 @@ watch(hasMailSetting, async enabled => {
   await loadFolders();
   const folderSwitchedFromQuery = applyFolderFromQuery();
   if (!folderSwitchedFromQuery) {
-    await loadMessages({
-      markOpenedAsRead: false,
-      notifyIfNew: false,
-      forceSync: false,
-    });
+    await loadMessages({ markOpenedAsRead: false, notifyIfNew: false });
   }
   startRealtimeStream();
 }, { immediate: true });
@@ -515,11 +511,7 @@ watch(activeFolderPath, async () => {
   }
 
   searchQuery.value = '';
-  await loadMessages({
-    markOpenedAsRead: false,
-    notifyIfNew: false,
-    forceSync: false,
-  });
+  await loadMessages({ markOpenedAsRead: false, notifyIfNew: false });
 });
 
 watch(
