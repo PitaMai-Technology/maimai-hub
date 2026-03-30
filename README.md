@@ -72,7 +72,6 @@ docker compose up -d
 
 ```bash
 pnpm exec prisma generate
-pnpm generate:better-auth
 ```
 
 2. マイグレーションの実行

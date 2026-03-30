@@ -1,5 +1,11 @@
 import { betterAuth } from 'better-auth';
-import { organization, admin, captcha, emailOTP } from 'better-auth/plugins';
+import {
+  organization,
+  admin,
+  captcha,
+  emailOTP,
+  genericOAuth,
+} from 'better-auth/plugins';
 import { prismaAdapter } from 'better-auth/adapters/prisma';
 import { ac, owner, admins, member } from '~~/server/utils/permissions';
 import prisma from '~~/lib/prisma';
@@ -12,6 +18,11 @@ export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: 'postgresql',
   }),
+  advanced: {
+    ipAddress: {
+      ipAddressHeaders: ['cf-connecting-ip'], // or any other custom header
+    },
+  },
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: true,
@@ -63,6 +74,17 @@ export const auth = betterAuth({
     captcha({
       provider: 'cloudflare-turnstile', // or google-recaptcha, hcaptcha, captchafox
       secretKey: process.env.TURNSTILE_SECRET_KEY!,
+    }),
+    genericOAuth({
+      config: [
+        {
+          providerId: 'custom',
+          clientId: process.env.CLIENT_ID!,
+          clientSecret: process.env.CLIENT_SECRET!,
+          discoveryUrl: process.env.DISCOVERY_URL!,
+          pkce: true,
+        },
+      ],
     }),
     admin({
       defaultRole: 'member',
